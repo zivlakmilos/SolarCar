@@ -1,3 +1,5 @@
 # Update script
 update.sh
 
+# Autom JavaScript autocompleate (auto-ternjs)
+.tern-project
