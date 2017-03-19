@@ -1,2 +1,2 @@
-# SolarCar
-Online car game
+# Solar Car
+Online car game (my sisteri school project)
