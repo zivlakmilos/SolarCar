@@ -6,6 +6,7 @@ class Player {
         this.height = height;
         this.sprite = sprite;
 
+        this.speed = 100.0;
         this.velX = 0.0;
         this.velY = 0.0;
     }
@@ -42,15 +43,48 @@ class Player {
         this.height = height;
     }
 
+    right(isDown) {
+        if(isDown)
+            this.velX += this.speed;
+        else
+            this.velX -= this.speed;
+        this.normalizeSpeed();
+    }
+
+    left(isDown) {
+        if(isDown)
+            this.velX -= this.speed;
+        else
+            this.velX += this.speed;
+        this.normalizeSpeed();
+    }
+
+    normalizeSpeed() {
+        if(this.velX > this.speed)
+            this.velX = this.speed;
+        if(this.velX < -this.speed)
+            this.velX = -this.speed;
+    }
+
     update(canvas, tick) {
+        this.x += this.velX * tick;
+
+        if(this.x < 0)
+            this.x = 0;
+        else if(this.x > canvas.width - this.width)
+            this.x = canvas.width - this.width;
+
         this.render(canvas);
     }
 
     render(canvas) {
         var ctx = canvas.getContext("2d");
 
+        var spriteX = this.velX > 0 ? 2 : 1;
+        spriteX = this.velX < 0 ? 0 : spriteX;
+        spriteX = spriteX * this.sprite.width / 3;
         ctx.drawImage(this.sprite,
-                      this.sprite.width / 3, 0, this.sprite.width / 3, this.sprite.height,
+                      spriteX, 0, this.sprite.width / 3, this.sprite.height,
                       this.x, this.y, this.width, this.height);
     }
 }
