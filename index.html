@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"m>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="./css/" />
+        <script type="text/javascript" src="./js/game.js"></script>
+
+        <title>Colar Car</title>
+    </head>
+
+    <body>
+        <canvas id="gameScreen" width="500" height="500" style="background: #CCCCCC">
+        </canvas>
+    </body>
+
+    <script type="text/javascript">
+        var canvas = document.getElementById("gameScreen");
+        var game = new Game(canvas);
+
+        setTimeout(game.update(0.05), 50);
+    </script>
+</html>
