@@ -3,8 +3,10 @@
     <head>
         <meta charset="UTF-8"m>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="./css/" />
+        <link rel="stylesheet" href="./css/main.css" />
         <script type="text/javascript" src="./js/game.js"></script>
+        <script type="text/javascript" src="./js/sprite.js"></script>
+        <script type="text/javascript" src="./js/player.js"></script>
 
         <title>Colar Car</title>
     </head>
@@ -12,12 +14,16 @@
     <body>
         <canvas id="gameScreen" width="500" height="500" style="background: #CCCCCC">
         </canvas>
+
+        <img class="img-hidden" id="imgPlayer" src="./img/player_straight.png" />
+        <img class="img-hidden" id="imgPlayerLeft" src="./img/player_left.png" />
+        <img class="img-hidden" id="imgPlayerRight" src="./img/player_right.png" />
+
+        <script type="text/javascript">
+            var canvas = document.getElementById("gameScreen");
+            var game = new Game(canvas);
+
+            setTimeout(game.update(0.05), 50);
+        </script>
     </body>
-
-    <script type="text/javascript">
-        var canvas = document.getElementById("gameScreen");
-        var game = new Game(canvas);
-
-        setTimeout(game.update(0.05), 50);
-    </script>
 </html>
