@@ -6,6 +6,7 @@ class Game {
         this.player = new Player(canvas.width / 2 - 25,
                                  canvas.height - 55,
                                  75, 50, playerSprite);
+        this.street = new Street();
     }
 
     keyDown(key) {
@@ -42,6 +43,7 @@ class Game {
         var ctx = this.canvas.getContext("2d");
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+        this.street.update(canvas, tick);
         this.player.update(canvas, tick);
     }
 }
