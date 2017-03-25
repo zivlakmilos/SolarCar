@@ -7,6 +7,8 @@ class Game {
                                  canvas.height - 55,
                                  75, 50, playerSprite);
         this.street = new Street();
+
+        this.time = new Date().getTime();
     }
 
     keyDown(key) {
@@ -39,7 +41,11 @@ class Game {
         }
     }
 
-    update(tick) {
+    update() {
+        var date = new Date();
+        var tick = (date.getTime() - this.time) / 1000.0;
+        this.time = date.getTime();
+
         var ctx = this.canvas.getContext("2d");
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
