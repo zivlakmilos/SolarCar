@@ -2,6 +2,8 @@ class Game {
     constructor(canvas) {
         this.canvas = canvas;
 
+        this.camera = new Camera(new Point(0, 500, 0), 100);
+
         var playerSprite = document.getElementById("imgPlayer");
         this.player = new Player(canvas.width / 2 - 25,
                                  canvas.height - 55,
@@ -49,7 +51,7 @@ class Game {
         var ctx = this.canvas.getContext("2d");
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.street.update(canvas, tick);
-        this.player.update(canvas, tick);
+        this.street.update(this.camera, canvas, tick);
+        this.player.update(this.camera, canvas, tick);
     }
 }

@@ -66,7 +66,7 @@ class Player {
             this.velX = -this.speed;
     }
 
-    update(canvas, tick) {
+    update(camera, canvas, tick) {
         this.x += this.velX * tick;
 
         if(this.x < 0)

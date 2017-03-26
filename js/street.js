@@ -1,114 +1,56 @@
 class Line {
-    constructor(z, color) {
-        this.ddz = 4;
-        this.dz = 20;
-        this.z = z;
-        this.roadLength = 250.0;
+    constructor(x, y, z, even) {
+        this.worldP1 = new Point(x, y, z);
+        this.worldP2 = new Point(x, y, z + Line.segmentLength());
+        this.screenP1 = new Point();            // Calculate later
+        this.screenP2 = new Point();            // Calculate later
+        this.screenW1 = 0;                      // Calculate later
+        this.screenW2 = 0;                      // Calculate later
 
-        this.color = color;
+        this.colorGrass = even ? "#008f00" : "#026b02";
+        this.colorRubmle = even ? "#FF0000" : "#FFFFFF";
+        this.colorRoad = even ? "#939393" : "#858585";
     }
 
-    get getZ() {
-        return this.z;
+    static segmentLength() {
+        return 200.0;
     }
 
-    update(canvas, tick) {
-        this.dz -= this.ddz * tick;
-        //this.dz = 4;
-        this.z -= this.dz;
+    projection(camera, canvas) {
+        this.screenP1 = Util.projection(this.worldP1, camera, canvas.width, canvas.height);
+        this.screenP2 = Util.projection(this.worldP2, camera, canvas.width, canvas.height);
 
+        var scale = camera.depth / (this.worldP1.z - camera.position.z);
+        this.screenW1 = scale * canvas.width * canvas.width / 2;
+        scale = camera.depth / (this.worldP2.z - camera.position.z);
+        this.screenW2 = scale * canvas.width * canvas.width / 2;
+    }
+
+    update(camera, canvas, tick) {
+        if(this.worldP1.z < camera.position.z)
+            return;
+
+        this.projection(camera, canvas);
         this.render(canvas);
     }
 
     render(canvas) {
         var ctx = canvas.getContext("2d");
 
-        if(this.z < 0)
-            return;
+        var p1 = new Point(this.screenP1.x, this.screenP1.y, this.screenP1.z);
+        var p2 = new Point(this.screenP1.x, this.screenP1.y, this.screenP1.z);
+        var p3 = new Point(this.screenP2.x, this.screenP2.y, this.screenP2.z);
+        var p4 = new Point(this.screenP2.x, this.screenP2.y, this.screenP2.z);
 
-        var scale1 = 1.0 / this.z;
-        var y1 = canvas.height * scale1;
-        y1 = (canvas.height / 2) - (canvas.height / 2) * y1;
-        var x1 = (canvas.width * 5) * scale1;
-        x1 = (canvas.width / 2) + (canvas.width / 2) * x1;
+        p1.x -= this.screenW1;
+        p2.x += this.screenW1;
+        p3.x += this.screenW2;
+        p4.x -= this.screenW2;
 
-        var scale2 = 1.0 / (this.z + this.roadLength);
-        var y2 = canvas.height * scale2;
-        y2 = (canvas.height / 2) - (canvas.height / 2) * y2;
-        var x2 = (canvas.width * 5) * scale2;
-        x2 = (canvas.width / 2) + (canvas.width / 2) * x2;
+        Util.polygon(ctx, 0, p1.y, ctx.canvas.width, p2.y,
+                          ctx.canvas.width, p3.y, 0, p4.y, this.colorGrass);
 
-        y1 = canvas.height - y1;
-        y2 = canvas.height - y2;
-
-        ctx.beginPath();
-        if(this.color > 0)
-            ctx.fillStyle = "#009500";
-        else
-            ctx.fillStyle = "#347500"
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(canvas.width - x1, y1);
-        ctx.lineTo(canvas.width - x2, y2);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x1, y1);
-        ctx.fill();
-        ctx.closePath();
-
-        var scale1 = 1.0 / this.z;
-        var y1 = canvas.height * scale1;
-        y1 = (canvas.height / 2) - (canvas.height / 2) * y1;
-        var x1 = (canvas.width + 25.0) * scale1;
-        x1 = (canvas.width / 2) + (canvas.width / 2) * x1;
-
-        var scale2 = 1.0 / (this.z + this.roadLength);
-        var y2 = canvas.height * scale2;
-        y2 = (canvas.height / 2) - (canvas.height / 2) * y2;
-        var x2 = (canvas.width + 25.0) * scale2;
-        x2 = (canvas.width / 2) + (canvas.width / 2) * x2;
-
-        y1 = canvas.height - y1;
-        y2 = canvas.height - y2;
-
-        ctx.beginPath();
-        if(this.color > 0)
-            ctx.fillStyle = "#FF0000";
-        else
-            ctx.fillStyle = "#FFFFFF"
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(canvas.width - x1, y1);
-        ctx.lineTo(canvas.width - x2, y2);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x1, y1);
-        ctx.fill();
-        ctx.closePath();
-
-        var scale1 = 1.0 / this.z;
-        var y1 = canvas.height * scale1;
-        y1 = (canvas.height / 2) - (canvas.height / 2) * y1;
-        var x1 = canvas.width * scale1;
-        x1 = (canvas.width / 2) + (canvas.width / 2) * x1;
-
-        var scale2 = 1.0 / (this.z + this.roadLength);
-        var y2 = canvas.height * scale2;
-        y2 = (canvas.height / 2) - (canvas.height / 2) * y2;
-        var x2 = canvas.width * scale2;
-        x2 = (canvas.width / 2) + (canvas.width / 2) * x2;
-
-        y1 = canvas.height - y1;
-        y2 = canvas.height - y2;
-
-        ctx.beginPath();
-        if(this.color > 0)
-            ctx.fillStyle = "#939393";
-        else
-            ctx.fillStyle = "#858585"
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(canvas.width - x1, y1);
-        ctx.lineTo(canvas.width - x2, y2);
-        ctx.lineTo(x2, y2);
-        ctx.lineTo(x1, y1);
-        ctx.fill();
-        ctx.closePath();
+        Util.polygon2(ctx, p1, p2, p3, p4, this.colorRoad);
     }
 }
 
@@ -116,28 +58,14 @@ class Street {
     constructor() {
         this.segments = [];
         this.segmentColor = 0;
+
+        for(var i = 0; i < 100; i++)
+            this.segments.push(new Line(0, 0, i * Line.segmentLength(), i % 2));
     }
 
-    update(canvas, tick) {
-        if(this.segments.length < 1) {
-            this.segments.push(new Line(3000.0, this.segmentColor));
-            this.segmentColor++;
-        } else if(this.segments[this.segments.length - 1].getZ < 2750) {
-            this.segments.push(new Line(3000.0, this.segmentColor));
-
-            if(this.segmentColor > 0)
-                this.segmentColor = 0;
-            else
-                this.segmentColor++;
-        }
-
-        for(var i = 0; i < this.segments.length; i++) {
-            this.segments[i].update(canvas, tick);
-            if(this.segments[i].getZ < 1)
-                this.segments.splice(i--, 1);
-        }
-
-        this.renderBackground(canvas);
+    update(camera, canvas, tick) {
+        for(var i = 0; i < this.segments.length; i++)
+            this.segments[i].update(camera, canvas, tick);
     }
 
     renderBackground(canvas) {
