@@ -31,7 +31,7 @@ class Line {
     }
 
     update(camera, canvas, tick) {
-        if(this.worldP1.z < camera.position.z)
+        if(this.worldP1.z < camera.position.z || this.worldP1.z - camera.position.z > 5000.0)
             return;
 
         this.projection(camera, canvas);
@@ -67,6 +67,8 @@ class Street {
     }
 
     update(camera, canvas, tick) {
+        this.renderBackground(canvas);
+
         for(var i = 0; i < this.segments.length; i++)
             this.segments[i].update(camera, canvas, tick);
     }
@@ -75,8 +77,8 @@ class Street {
         var ctx = canvas.getContext("2d");
 
         ctx.beginPath();
-        ctx.fillStyle = "#007dff";
-        ctx.rect(0, 0, canvas.width, canvas.height * 7.5 / 12);
+        ctx.fillStyle = "#51a6fe";
+        ctx.rect(0, 0, canvas.width, canvas.height);
         ctx.fill();
         ctx.closePath();
     }
