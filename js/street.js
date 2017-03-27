@@ -54,10 +54,6 @@ class Line {
         Util.polygon(ctx, 0, p1.y, ctx.canvas.width, p2.y,
                           ctx.canvas.width, p3.y, 0, p4.y, this.colorGrass);
         Util.polygon2(ctx, p1, p2, p3, p4, this.colorRoad);
-        Util.polygon(ctx, p1.x, p1.y,
-                          p2.x, p2.y,
-                          p1.x + this.screenRumbleW1, p3.y,
-                          p2.x + this.screenRumbleW2, p4.y, this.colorRubmle);
     }
 }
 
