@@ -16,14 +16,18 @@ class Line {
         return 200.0;
     }
 
+    static roadWidth() {
+        return 1000.0;
+    }
+
     projection(camera, canvas) {
         this.screenP1 = Util.projection(this.worldP1, camera, canvas.width, canvas.height);
         this.screenP2 = Util.projection(this.worldP2, camera, canvas.width, canvas.height);
 
         var scale = camera.depth / (this.worldP1.z - camera.position.z);
-        this.screenW1 = scale * canvas.width * canvas.width / 2;
+        this.screenW1 = scale * Line.roadWidth() * canvas.width / 2;
         scale = camera.depth / (this.worldP2.z - camera.position.z);
-        this.screenW2 = scale * canvas.width * canvas.width / 2;
+        this.screenW2 = scale * Line.roadWidth() * canvas.width / 2;
     }
 
     update(camera, canvas, tick) {
@@ -49,8 +53,11 @@ class Line {
 
         Util.polygon(ctx, 0, p1.y, ctx.canvas.width, p2.y,
                           ctx.canvas.width, p3.y, 0, p4.y, this.colorGrass);
-
         Util.polygon2(ctx, p1, p2, p3, p4, this.colorRoad);
+        Util.polygon(ctx, p1.x, p1.y,
+                          p2.x, p2.y,
+                          p1.x + this.screenRumbleW1, p3.y,
+                          p2.x + this.screenRumbleW2, p4.y, this.colorRubmle);
     }
 }
 

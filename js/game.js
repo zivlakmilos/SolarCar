@@ -2,7 +2,7 @@ class Game {
     constructor(canvas) {
         this.canvas = canvas;
 
-        this.camera = new Camera(new Point(0, 500, 0), 100);
+        this.camera = new Camera(new Point(0, 1000, 0), 100);
 
         var playerSprite = document.getElementById("imgPlayer");
         this.player = new Player(canvas.width / 2 - 25,
