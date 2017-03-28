@@ -1,15 +1,18 @@
 class Line {
-    constructor(x, y, z, even) {
+    constructor(x, y, z, index) {
         this.worldP1 = new Point(x, y, z);
         this.worldP2 = new Point(x, y, z + Line.segmentLength());
         this.screenP1 = new Point();            // Calculate later
         this.screenP2 = new Point();            // Calculate later
         this.screenW1 = 0;                      // Calculate later
         this.screenW2 = 0;                      // Calculate later
+        this.sprite = null;                     // Load later
+        this.spriteX = 0;                       // Calculate later
+        this.index = index;
 
-        this.colorGrass = even ? "#008f00" : "#026b02";
-        this.colorRubmle = even ? "#FF0000" : "#FFFFFF";
-        this.colorRoad = even ? "#939393" : "#858585";
+        this.colorGrass = index % 2 ? "#008f00" : "#026b02";
+        this.colorRubmle = index % 2 ? "#FF0000" : "#FFFFFF";
+        this.colorRoad = index % 2 ? "#939393" : "#858585";
     }
 
     static segmentLength() {
@@ -31,11 +34,23 @@ class Line {
     }
 
     update(camera, canvas, tick) {
-        if(this.worldP1.z < camera.position.z || this.worldP1.z - camera.position.z > 5000.0)
+        if(this.worldP1.z < camera.position.z || this.worldP1.z - camera.position.z > 5000.0) {
+            this.sprite = null;
             return;
+        }
 
         this.projection(camera, canvas);
         this.render(canvas);
+
+        if(this.index % 5 == 0) {
+            if(this.sprite == null) {
+                this.sprite = document.getElementById("imgSun");
+                var scale = camera.depth / (this.worldP1.z - camera.position.z);
+                this.spriteX = Util.randomRange(0.0, 3.0) - 2.0;
+            }
+
+            this.renderSprite(camera, canvas);
+        }
     }
 
     render(canvas) {
@@ -55,22 +70,39 @@ class Line {
                           ctx.canvas.width, p3.y, 0, p4.y, this.colorGrass);
         Util.polygon2(ctx, p1, p2, p3, p4, this.colorRoad);
     }
+
+    renderSprite(camera, canvas) {
+        var ctx = canvas.getContext("2d");
+
+        var scale = camera.depth / (this.worldP1.z - camera.position.z);
+        //var x = this.screenP1.x - scale * canvas.width / 2;
+        var x = this.screenP1.x + scale * this.spriteX * canvas.width / 2;
+        var y = this.screenP1.y;
+        var width = 200.0 * this.screenW1 / canvas.width;
+        var height = 200.0 * this.screenW1 / canvas.width;
+
+        x += width * this.spriteX;
+        y -= height;
+
+        ctx.drawImage(this.sprite,
+                      0, 0, this.sprite.width, this.sprite.height,
+                      x, y, width, height);
+    }
 }
 
 class Street {
     constructor() {
         this.segments = [];
-        this.segmentColor = 0;
 
         for(var i = 0; i < 100; i++)
-            this.segments.push(new Line(0, 0, i * Line.segmentLength(), i % 2));
+            this.segments.push(new Line(0, 0, i * Line.segmentLength(), i));
     }
 
     update(camera, canvas, tick) {
         this.renderBackground(canvas);
 
         for(var i = 0; i < this.segments.length; i++)
-            this.segments[i].update(camera, canvas, tick);
+            this.segments[this.segments.length - i - 1].update(camera, canvas, tick);
     }
 
     renderBackground(canvas) {

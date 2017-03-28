@@ -8,7 +8,8 @@ class Game {
         this.player = new Player(canvas.width / 2 - 25,
                                  canvas.height - 55,
                                  75, 50, playerSprite);
-        this.street = new Street();
+        var sunSprite = document.getElementById("imgSun");
+        this.street = new Street(sunSprite);
 
         this.time = new Date().getTime();
     }
