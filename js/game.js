@@ -8,8 +8,7 @@ class Game {
         this.player = new Player(canvas.width / 2 - 25,
                                  canvas.height - 55,
                                  75, 50, playerSprite);
-        var sunSprite = document.getElementById("imgSun");
-        this.street = new Street(sunSprite);
+        this.street = new Street();
 
         this.time = new Date().getTime();
     }
@@ -56,7 +55,11 @@ class Game {
         if(this.camera.position.z >= 50 * Line.segmentLength())
             this.camera.position.z = 0.0;
 
-        this.street.update(this.camera, canvas, tick);
+        this.street.update(this.camera, canvas, tick, this.player);
         this.player.update(this.camera, canvas, tick);
+
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = "30px Arial";
+        ctx.fillText(this.player.score, 10, 30);
     }
 }

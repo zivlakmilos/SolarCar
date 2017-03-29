@@ -33,7 +33,7 @@ class Line {
         this.screenW2 = scale * Line.roadWidth() * canvas.width / 2;
     }
 
-    update(camera, canvas, tick) {
+    update(camera, canvas, tick, player) {
         if(this.worldP1.z < camera.position.z || this.worldP1.z - camera.position.z > 5000.0) {
             this.sprite = null;
             return;
@@ -49,7 +49,7 @@ class Line {
                 this.spriteX = Util.randomRange(0.0, 3.0) - 2.0;
             }
 
-            this.renderSprite(camera, canvas);
+            this.renderSprite(camera, canvas, player);
         }
     }
 
@@ -71,11 +71,10 @@ class Line {
         Util.polygon2(ctx, p1, p2, p3, p4, this.colorRoad);
     }
 
-    renderSprite(camera, canvas) {
+    renderSprite(camera, canvas, player) {
         var ctx = canvas.getContext("2d");
 
         var scale = camera.depth / (this.worldP1.z - camera.position.z);
-        //var x = this.screenP1.x - scale * canvas.width / 2;
         var x = this.screenP1.x + scale * this.spriteX * canvas.width / 2;
         var y = this.screenP1.y;
         var width = 200.0 * this.screenW1 / canvas.width;
@@ -87,6 +86,10 @@ class Line {
         ctx.drawImage(this.sprite,
                       0, 0, this.sprite.width, this.sprite.height,
                       x, y, width, height);
+
+        if(player.collision(x, y, width, height)) {
+            this.spriteX = -1000;
+        }
     }
 }
 
@@ -98,11 +101,11 @@ class Street {
             this.segments.push(new Line(0, 0, i * Line.segmentLength(), i));
     }
 
-    update(camera, canvas, tick) {
+    update(camera, canvas, tick, player) {
         this.renderBackground(canvas);
 
         for(var i = 0; i < this.segments.length; i++)
-            this.segments[this.segments.length - i - 1].update(camera, canvas, tick);
+            this.segments[this.segments.length - i - 1].update(camera, canvas, tick, player);
     }
 
     renderBackground(canvas) {

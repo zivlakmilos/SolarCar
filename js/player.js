@@ -9,6 +9,8 @@ class Player {
         this.speed = 100.0;
         this.velX = 0.0;
         this.velY = 0.0;
+
+        this.score = 0;
     }
 
     get getX() {
@@ -64,6 +66,15 @@ class Player {
             this.velX = this.speed;
         if(this.velX < -this.speed)
             this.velX = -this.speed;
+    }
+
+    collision(x, y, width, height) {
+        if(x + width > this.x && x < this.x + this.width &&
+            y + height > this.y && y < this.y + this.height) {
+                this.score++;
+                return true;
+        }
+        return false;
     }
 
     update(camera, canvas, tick) {
