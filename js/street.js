@@ -101,6 +101,20 @@ class Street {
             this.segments.push(new Line(0, 0, i * Line.segmentLength(), i));
     }
 
+    cameraLimit(camera) {
+        if(camera.position.z >= 50 * Line.segmentLength()) {
+            var oldPos = camera.position.z / Line.segmentLength();
+            camera.position.z -= 50 * Line.segmentLength();
+            var newPos = camera.position.z / Line.segmentLength();
+
+            var dif = oldPos - newPos;
+            for(var i = 0; i < this.segments.length - dif; i++) {
+                this.segments[i].sprite = this.segments[i + dif].sprite;
+                this.segments[i].spriteX = this.segments[i + dif].spriteX;
+            }
+        }
+    }
+
     update(camera, canvas, tick, player) {
         this.renderBackground(canvas);
 

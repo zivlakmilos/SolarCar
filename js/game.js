@@ -52,8 +52,7 @@ class Game {
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         this.camera.position.z += tick * 1500.0;
-        if(this.camera.position.z >= 50 * Line.segmentLength())
-            this.camera.position.z = 0.0;
+        this.street.cameraLimit(this.camera, 50);
 
         this.street.update(this.camera, canvas, tick, this.player);
         this.player.update(this.camera, canvas, tick);
