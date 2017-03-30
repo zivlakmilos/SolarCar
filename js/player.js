@@ -6,7 +6,7 @@ class Player {
         this.height = height;
         this.sprite = sprite;
 
-        this.speed = 100.0;
+        this.speed = 150.0;
         this.velX = 0.0;
         this.velY = 0.0;
 
