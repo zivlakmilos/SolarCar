@@ -42,7 +42,15 @@ class Line {
         this.projection(camera, canvas);
         this.render(canvas);
 
-        if(this.index % 5 == 0) {
+        if(this.index % 10 == 0) {
+            if(this.sprite == null) {
+                this.sprite = document.getElementById("imgCloud");
+                var scale = camera.depth / (this.worldP1.z - camera.position.z);
+                this.spriteX = Util.randomRange(0.0, 3.0) - 2.0;
+            }
+
+            this.renderSprite(camera, canvas, player);
+        } else if(this.index % 5 == 0) {
             if(this.sprite == null) {
                 this.sprite = document.getElementById("imgSun");
                 var scale = camera.depth / (this.worldP1.z - camera.position.z);
