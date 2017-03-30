@@ -70,10 +70,8 @@ class Player {
 
     collision(x, y, width, height) {
         if(x + width > this.x && x < this.x + this.width &&
-            y + height > this.y && y < this.y + this.height) {
-                this.score++;
+            y + height > this.y && y < this.y + this.height)
                 return true;
-        }
         return false;
     }
 

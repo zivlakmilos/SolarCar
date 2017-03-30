@@ -36,7 +36,7 @@ class Line {
     update(camera, canvas, tick, player) {
         if(this.worldP1.z < camera.position.z || this.worldP1.z - camera.position.z > 5000.0) {
             this.sprite = null;
-            return;
+            return true;
         }
 
         this.projection(camera, canvas);
@@ -49,7 +49,7 @@ class Line {
                 this.spriteX = Util.randomRange(0.0, 3.0) - 2.0;
             }
 
-            this.renderSprite(camera, canvas, player);
+            return this.renderSprite(camera, canvas, player);
         } else if(this.index % 5 == 0) {
             if(this.sprite == null) {
                 this.sprite = document.getElementById("imgSun");
@@ -57,8 +57,9 @@ class Line {
                 this.spriteX = Util.randomRange(0.0, 3.0) - 2.0;
             }
 
-            this.renderSprite(camera, canvas, player);
+            return this.renderSprite(camera, canvas, player);
         }
+        return true;
     }
 
     render(canvas) {
@@ -96,8 +97,13 @@ class Line {
                       x, y, width, height);
 
         if(player.collision(x, y, width, height)) {
+            if(this.index % 10 == 0)
+                return false;
+            player.score++;
             this.spriteX = -1000;
         }
+
+        return true;
     }
 }
 
@@ -127,7 +133,9 @@ class Street {
         this.renderBackground(canvas);
 
         for(var i = 0; i < this.segments.length; i++)
-            this.segments[this.segments.length - i - 1].update(camera, canvas, tick, player);
+            if(!this.segments[this.segments.length - i - 1].update(camera, canvas, tick, player))
+                return false;
+        return true;
     }
 
     renderBackground(canvas) {
